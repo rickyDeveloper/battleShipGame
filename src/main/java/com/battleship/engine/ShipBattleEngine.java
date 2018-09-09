@@ -31,7 +31,7 @@ public class ShipBattleEngine implements BattleEngine {
     private boolean isGameOver;
 
     @Autowired
-    public ShipBattleEngine(Player player1, Player player2) {
+    public ShipBattleEngine(@Qualifier("player1") Player player1, @Qualifier("player2") Player player2) {
         this.player1 = player1;
         this.player2 = player2;
         this.isPlayer1MissileSender = true;

@@ -12,6 +12,7 @@ import java.util.HashSet;
 import java.util.stream.IntStream;
 
 /**
+ * A square battle are
  * Created by vikasnaiyar on 08/09/18.
  */
 @Component
@@ -47,19 +48,18 @@ public class SquareBattleArea implements BattleArea {
      * @return
      */
     @Override
-    public Collection<Coordinate> parkShip(Ship ship, Coordinate startCoordinate) {
+    public Collection<Coordinate> placeShip(Ship ship, Coordinate startCoordinate) {
         Collection<Coordinate> allocatedCoordinates = new HashSet<>();
 
         int startXIndex = ((TwoDimensionalCoordinate) startCoordinate).getX() - 1;
         int startYIndex = ((TwoDimensionalCoordinate) startCoordinate).getY() - 'A';
+
         int shipWidth = ship.getWidth();
         int shipHeight = ship.getHeight();
 
         IntStream.range(startXIndex, shipWidth + startXIndex).forEach(i ->
                 IntStream.range(startYIndex, shipHeight + startYIndex).forEach(j -> {
                     allocatedCoordinates.add(coordinates[i][j]);
-                    // This output for testing purpose
-                    System.out.println("Granting coordinates " + coordinates[i][j].toString());
                 })
         );
 

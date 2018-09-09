@@ -6,6 +6,14 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 /**
+ *
+ * This class can be made generic also by parameterizing TwoDimensionalCoordinate<X,Y>
+ *
+ * At state of  TwoDimensionalCoordinate is not getting
+ * changed I am re-using it for same both the palyers.
+ *
+ * i.e same coordinates for both players
+ *
  * Created by vikasnaiyar on 08/09/18.
  */
 @Component
@@ -35,6 +43,11 @@ public class TwoDimensionalCoordinate implements Coordinate {
         return  "" + y + x;
     }
 
+    /**
+     * Overriding as using these coordinates in hashset
+     * @param o
+     * @return
+     */
     @Override
     public boolean equals(Object o) {
 

@@ -17,6 +17,8 @@ import java.util.Collection;
 import java.util.Map;
 
 /**
+ *
+ * Main class for this app which starts the game
  * Created by vikasnaiyar on 08/09/18.
  */
 @SpringBootApplication
@@ -26,7 +28,6 @@ public class BattleShipGameApplication implements CommandLineRunner {
 
     @Autowired
     private ApplicationContext appContext;
-
 
     public static void main(String args[]) {
         SpringApplication app = new SpringApplication(BattleShipGameApplication.class);
@@ -49,8 +50,5 @@ public class BattleShipGameApplication implements CommandLineRunner {
 
         battleEngine.startGame();
     }
-
-
-
 
 }

@@ -34,6 +34,7 @@ public class SquareBattleAreaConfig {
 
     /**
      * Coordinates for the battle area
+     * Initialization of the coordinates of battle area
      * @return
      */
     @Bean

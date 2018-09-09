@@ -56,7 +56,7 @@ public class SquareBattleAreaTest {
 
     @Test
     public void testParkShip(){
-        Collection<Coordinate> allocatedCoordinate = squareBattleArea.parkShip(ship,coordinate);
+        Collection<Coordinate> allocatedCoordinate = squareBattleArea.placeShip(ship,coordinate);
         Assert.assertNotEquals("Coordinates Allocated count cannot be zero" , 0, allocatedCoordinate.size());
 
         boolean foundMatchingCoordinate = allocatedCoordinate.stream()
