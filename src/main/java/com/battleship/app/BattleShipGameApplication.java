@@ -1,10 +1,7 @@
-package com.battleship.main;
+package com.battleship.app;
 
 import com.battleship.area.BattleArea;
-import com.battleship.coordinate.Coordinate;
 import com.battleship.engine.BattleEngine;
-import com.battleship.player.Person;
-import com.battleship.ship.Ship;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
@@ -12,9 +9,6 @@ import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.ComponentScan;
-
-import java.util.Collection;
-import java.util.Map;
 
 /**
  *

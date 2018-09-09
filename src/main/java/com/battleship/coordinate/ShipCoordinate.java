@@ -7,6 +7,7 @@ import org.springframework.stereotype.Component;
 import java.util.Collection;
 
 /**
+ * Trying to build a sort of decorator pattern
  * Created by vikasnaiyar on 09/09/18.
  */
 @Component
