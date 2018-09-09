@@ -6,6 +6,7 @@ import com.battleship.ship.Ship;
 import java.util.Collection;
 
 /**
+ * Interface for representing a battle area
  * Created by vikasnaiyar on 08/09/18.
  */
 public interface BattleArea {

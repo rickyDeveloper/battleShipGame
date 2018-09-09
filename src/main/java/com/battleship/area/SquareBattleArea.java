@@ -55,17 +55,13 @@ public class SquareBattleArea implements BattleArea {
         int shipWidth = ship.getWidth();
         int shipHeight = ship.getHeight();
 
-        //System.out.println("Parking ship " + shipWidth + " :: " + shipHeight);
-        //System.out.println("Coordinates ship " + ((TwoDimensionalCoordinate) startCoordinate).getY() + " :: " +  ((TwoDimensionalCoordinate) startCoordinate).getX());
-
         IntStream.range(startXIndex, shipWidth + startXIndex).forEach(i ->
                 IntStream.range(startYIndex, shipHeight + startYIndex).forEach(j -> {
                     allocatedCoordinates.add(coordinates[i][j]);
+                    // This output for testing purpose
                     System.out.println("Granting coordinates " + coordinates[i][j].toString());
                 })
         );
-
-        //System.out.println("Parked ship ");
 
         return allocatedCoordinates;
     }

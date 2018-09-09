@@ -27,6 +27,10 @@ bootJar {
 
 dependencies {
     compile group: 'org.springframework.boot', name: 'spring-boot-starter'
+
+    //compile group: 'com.google.guava', name: 'guava-annotations', version: 'r03'
+
     testCompile group: 'org.springframework.boot', name: 'spring-boot-starter-test'
+
 }
 

@@ -11,4 +11,6 @@ public interface BattleEngine {
 
     boolean pauseGame();
 
+    boolean isGameOver();
+
 }

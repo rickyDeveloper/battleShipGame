@@ -42,8 +42,6 @@ public class ShipCoordinate implements DestroyableCoordinate {
             isHit = true;
         }
 
-        System.out.println("Missed hit for " + currentHitCount + coordinate.toString() + " :: " + this.coordinate);
-
         return isHit;
     }
 

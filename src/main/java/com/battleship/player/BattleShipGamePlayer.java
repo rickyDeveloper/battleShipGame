@@ -52,6 +52,6 @@ public class BattleShipGamePlayer implements Player {
 
     @Override
     public boolean areAllShipsDestroyed() {
-        return shipCoordinatesMap.values().stream().anyMatch(v -> v.stream().anyMatch(dc -> !dc.isDestroyed()));
+        return shipCoordinatesMap.values().stream().allMatch(v -> v.stream().allMatch(dc -> dc.isDestroyed()));
     }
 }
