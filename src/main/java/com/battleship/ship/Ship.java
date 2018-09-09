@@ -9,5 +9,7 @@ public interface Ship {
 
     int getHeight();
 
-    ShipType getType();
+    default ShipType getType() {
+        return null;
+    }
 }

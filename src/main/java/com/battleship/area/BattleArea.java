@@ -3,17 +3,19 @@ package com.battleship.area;
 import com.battleship.coordinate.Coordinate;
 import com.battleship.ship.Ship;
 
+import java.util.Collection;
+
 /**
  * Created by vikasnaiyar on 08/09/18.
  */
 public interface BattleArea {
 
-    boolean parkShip(Ship ship , Coordinate coordinate);
+    Collection<Coordinate> parkShip(Ship ship , Coordinate startCoordinate);
 
     /**
      * This is mainly written for testing purpose
      * @return
      */
-    int getBattleAreaUnits();
+    int getBattleArea();
 
 }

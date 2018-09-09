@@ -4,11 +4,10 @@ import com.battleship.area.BattleArea;
 import com.battleship.area.SquareBattleArea;
 import com.battleship.coordinate.Coordinate;
 import com.battleship.coordinate.TwoDimensionalCoordinate;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.annotation.Lookup;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Import;
 
 import java.util.stream.IntStream;
 
@@ -18,28 +17,44 @@ import java.util.stream.IntStream;
 @Configuration
 public class SquareBattleAreaConfig {
 
-    private char[] y_dimensions = {'A', 'B', 'C', 'D', 'E'};
+    private static char[] y_coordinates = {'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J',
+                                   'K', 'L','M', 'N', 'O','P', 'Q', 'R', 'S', 'T' ,
+                                    'U', 'V', 'W', 'X', 'Y' , 'Z'};
+
+    @Value("${battlearea.width}")
+    private int width;
+
+    @Value("${battlearea.height}")
+    private char height;
 
     @Bean
-    public BattleArea squareBattleArea() {
+    public BattleArea battleArea() {
         return new SquareBattleArea(coordinates());
     }
 
     /**
-     * Create dummy coordinates for testing.
+     * Coordinates for the battle area
      * @return
      */
     @Bean
     public Coordinate[][] coordinates() {
-        Coordinate[][] coordinates = new TwoDimensionalCoordinate[3][3];
 
-        IntStream.range(0,3).forEach(i ->
-                IntStream.range(0,3).forEach(j -> {
-                    coordinates[i][j] = new TwoDimensionalCoordinate(y_dimensions[j], i);
+        int heightInInteger = height - y_coordinates[0] + 1;
+
+        Coordinate[][] coordinates = new TwoDimensionalCoordinate[width][heightInInteger];
+
+        IntStream.range(0,width).forEach(i ->
+                IntStream.range(0,heightInInteger).forEach(j -> {
+                    coordinates[i][j] = getTwoDimensionalCoordinate(y_coordinates[j], i+1);
                 })
         );
 
         return coordinates;
+    }
+
+    @Lookup
+    public TwoDimensionalCoordinate getTwoDimensionalCoordinate(char y, int x) {
+        return null;
     }
 
 }

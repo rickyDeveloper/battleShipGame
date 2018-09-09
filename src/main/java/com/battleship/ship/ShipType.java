@@ -17,4 +17,15 @@ public enum ShipType {
         return this.destroyHitCounts;
     }
 
+    public static ShipType getShipType(String type) {
+        ShipType shipType = null;
+        switch (type) {
+            case "P":
+                shipType = P;
+                break;
+            case "Q":
+                shipType = Q;
+        }
+        return shipType;
+    }
 }

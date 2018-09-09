@@ -28,6 +28,6 @@ public class SquareBattleAreaTest {
 
     @Test
     public void testBattleAreaSize() {
-        Assert.assertEquals("BattleArea units should be equal", 9, squareBattleArea.getBattleAreaUnits()) ;
+        Assert.assertEquals("BattleArea units should be equal", 9, squareBattleArea.getBattleArea()) ;
     }
 }
