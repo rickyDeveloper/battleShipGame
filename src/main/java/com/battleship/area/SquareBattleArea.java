@@ -2,8 +2,11 @@ package com.battleship.area;
 
 import com.battleship.coordinate.Coordinate;
 import com.battleship.coordinate.TwoDimensionalCoordinate;
+import com.battleship.exception.OverlappingCoordinateException;
 import com.battleship.ship.Ship;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.config.ConfigurableBeanFactory;
+import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
@@ -16,6 +19,7 @@ import java.util.stream.IntStream;
  * Created by vikasnaiyar on 08/09/18.
  */
 @Component
+@Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public class SquareBattleArea implements BattleArea {
 
     private Coordinate[][] coordinates;
@@ -57,10 +61,19 @@ public class SquareBattleArea implements BattleArea {
         int shipWidth = ship.getWidth();
         int shipHeight = ship.getHeight();
 
-        IntStream.range(startXIndex, shipWidth + startXIndex).forEach(i ->
-                IntStream.range(startYIndex, shipHeight + startYIndex).forEach(j -> {
-                    allocatedCoordinates.add(coordinates[i][j]);
-                })
+
+        IntStream.range(startXIndex, shipWidth + startXIndex).forEach(i -> {
+                    IntStream.range(startYIndex, shipHeight + startYIndex).forEach(j -> {
+                        if (((TwoDimensionalCoordinate) coordinates[i][j]).isOccupied()) {
+                                System.err.println("Pre-occupied coordinate found at " + coordinates[i][j].toString());
+                                throw new RuntimeException("Pre-occupied coordinate found at " + coordinates[i][j].toString());
+                        }
+
+                        // add the coordinates in allocation list
+                        allocatedCoordinates.add(coordinates[i][j]);
+                        ((TwoDimensionalCoordinate) coordinates[i][j]).setOccupied(true);
+                    });
+                }
         );
 
         return allocatedCoordinates;

@@ -25,19 +25,19 @@ import java.util.stream.Collectors;
 @Component
 @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public class BattleShipGamePlayer implements Player {
-    private Person person;
+    private String name;
     private Map<Ship, Collection<DestroyableCoordinate>> shipCoordinatesMap;
     private List<Coordinate> missileTargets;
 
-    public BattleShipGamePlayer(Person person, Map<Ship, Collection<DestroyableCoordinate>> shipCoordinatesMap, List<Coordinate> missileTargets) {
-        this.person = person;
+    public BattleShipGamePlayer(String name, Map<Ship, Collection<DestroyableCoordinate>> shipCoordinatesMap, List<Coordinate> missileTargets) {
+        this.name = name;
         this.shipCoordinatesMap = shipCoordinatesMap;
         this.missileTargets = missileTargets;
     }
 
     @Override
     public String getName() {
-        return person.getName();
+        return this.name;
     }
 
     @Override

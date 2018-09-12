@@ -10,14 +10,4 @@ public interface BattleEngine {
      */
     void startGame();
 
-    /**
-     * Below methods are just add-on. Not being used in current impl
-     * @return
-     */
-    boolean endGame();
-
-    boolean pauseGame();
-
-    boolean isGameOver();
-
 }

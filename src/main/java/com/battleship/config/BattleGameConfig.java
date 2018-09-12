@@ -20,6 +20,7 @@ import org.springframework.boot.origin.SystemEnvironmentOrigin;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
+import org.springframework.core.env.Environment;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -30,8 +31,13 @@ import java.util.stream.IntStream;
  * Created by vikasnaiyar on 09/09/18.
  */
 @Configuration
-@Import({SquareBattleAreaConfig.class, PersonConfig.class})
+@Import({SquareBattleAreaConfig.class})
 public class BattleGameConfig {
+
+    @Autowired
+    private Environment env;
+
+    public static final String PLAYERS_MISSILE_TARGET_PROPERTY = "battlearea.missile.targets.player";
 
     @Value("${battlearea.ships.count}")
     private int shipCount;
@@ -39,37 +45,23 @@ public class BattleGameConfig {
     @Value("#{'${battlearea.ships.details}'.split(',')}")
     private String[] shipDetails;
 
-    @Value("${battlearea.player1.missile.targets}")
-    private String player1MissileTargets;
+    @Value("${battlearea.players.count}")
+    private int playersCount;
 
-    @Value("${battlearea.player2.missile.targets}")
-    private String player2MissileTargets;
+    @Value("${battlearea.ships.details.coordinates.offset}")
+    private int coordinatesOffset;
 
-    @Autowired
-    private BattleArea battleArea;
 
-    /**
-     * Beans for player 1
-     *
-     * @param person1
-     * @return
-     */
     @Bean
-    @Autowired
-    public Player player1(Person person1) {
-        return new BattleShipGamePlayer(person1, getPlayer1ShipCoordinates(), getPlayer1MissileTargets());
-    }
+    public List<Player> players() {
+         List<Player> players  = new ArrayList<>();
 
-    /**
-     * Bean for player 2
-     *
-     * @param person2
-     * @return
-     */
-    @Bean
-    @Autowired
-    public Player player2(Person person2) {
-        return new BattleShipGamePlayer(person2, getPlayer2ShipCoordinates(), getPlayer2MissileTargets());
+        IntStream.rangeClosed(1,playersCount).forEach( i -> {
+            Player player = new BattleShipGamePlayer("Player-"+i, getPlayerShipCoordinates(i), getPlayerMissileTargets(i));
+            players.add(player);
+        });
+
+         return players;
     }
 
     /**
@@ -82,68 +74,38 @@ public class BattleGameConfig {
      *
      * @return
      */
-    public Map<Ship, Collection<DestroyableCoordinate>> getPlayer1ShipCoordinates() {
+    public Map<Ship, Collection<DestroyableCoordinate>> getPlayerShipCoordinates(int playerNumber) {
 
         Map<Ship, Collection<DestroyableCoordinate>> playerShipCoordinatesMap = new HashMap<>();
+
+        BattleArea battleArea = getBattleArea();
+
+        int playerInputCoordinateOffset = coordinatesOffset+playerNumber;
 
         IntStream.range(0, shipCount).forEach(index -> {
             String[] shipInfo = shipDetails[index].trim().split(" ");
 
             Ship ship = getBattleShip(Integer.valueOf(shipInfo[1]), Integer.valueOf(shipInfo[2]), ShipType.getShipType(shipInfo[0]));
 
-            Coordinate playerStartCoordinate = new TwoDimensionalCoordinate(shipInfo[3].charAt(0), Integer.valueOf(shipInfo[3].substring(1)));
+            Coordinate playerStartCoordinate = new TwoDimensionalCoordinate(shipInfo[playerInputCoordinateOffset].charAt(0), Integer.valueOf(shipInfo[playerInputCoordinateOffset].substring(1)));
 
-            playerShipCoordinatesMap.putIfAbsent(ship, getCoordinatesForShip(ship, playerStartCoordinate));
+            Collection<DestroyableCoordinate> destroyableCoordinatesForShip =  getDestroyableCoordinatesForShip(ship,
+                    getCoordinatesForShip(battleArea, ship, playerStartCoordinate));
+
+            playerShipCoordinatesMap.putIfAbsent(ship, destroyableCoordinatesForShip);
         });
 
         return playerShipCoordinatesMap;
     }
 
     /**
-     * Same coments as above
-     *
-     * @return
-     */
-    public Map<Ship, Collection<DestroyableCoordinate>> getPlayer2ShipCoordinates() {
-
-        Map<Ship, Collection<DestroyableCoordinate>> playerShipCoordinatesMap = new HashMap<>();
-
-        IntStream.range(0, shipCount).forEach(index -> {
-            String[] shipInfo = shipDetails[index].trim().split(" ");
-
-            Ship ship = getBattleShip(Integer.valueOf(shipInfo[1]), Integer.valueOf(shipInfo[2]), ShipType.getShipType(shipInfo[0]));
-
-            Coordinate playerStartCoordinate = getTwoDimensionalCoordinate(shipInfo[4].charAt(0), Integer.valueOf(shipInfo[4].substring(1)));
-
-            playerShipCoordinatesMap.putIfAbsent(ship, getCoordinatesForShip(ship, playerStartCoordinate));
-        });
-
-
-        return playerShipCoordinatesMap;
-    }
-
-
-    /**
      * These are details of missile target for player
      *
      * @return
      */
-    public List<Coordinate> getPlayer1MissileTargets() {
+    public List<Coordinate> getPlayerMissileTargets(int playerNumber) {
 
-        String[] missileTargets = player1MissileTargets.trim().split(" ");
-
-        return getMissileCoordinates(missileTargets);
-    }
-
-
-    /**
-     * These are details of missile target for player
-     *
-     * @return
-     */
-    public List<Coordinate> getPlayer2MissileTargets() {
-
-        String[] missileTargets = player2MissileTargets.trim().split(" ");
+        String[] missileTargets = env.getProperty(PLAYERS_MISSILE_TARGET_PROPERTY + playerNumber).trim().split(" ");
 
         return getMissileCoordinates(missileTargets);
     }
@@ -164,17 +126,21 @@ public class BattleGameConfig {
 
     /**
      * The method tries to park the ship starting from a specific position
-     *
+     * If the ship coordinates allocation encounter overlapping coordinates, this method will through RunTimeException.
      * @param ship
-     * @param coordinate
+     * @param coordinates
      * @return
      */
-    private Collection<DestroyableCoordinate> getCoordinatesForShip(Ship ship, Coordinate coordinate) {
-        Collection<Coordinate> allocatedCoordinate = battleArea.placeShip(ship, coordinate);
-        return allocatedCoordinate.stream().map(ac ->
+    private Collection<DestroyableCoordinate> getDestroyableCoordinatesForShip(Ship ship, Collection<Coordinate> coordinates) {
+        return coordinates.stream().map(ac ->
                 getShipCoordinate(ship.getType().getDestroyHitCounts(), ac)
         ).collect(Collectors.toCollection(HashSet::new));
     }
+
+    private Collection<Coordinate> getCoordinatesForShip(BattleArea battleArea, Ship ship, Coordinate startCoordinate) {
+        return battleArea.placeShip(ship, startCoordinate);
+    }
+
 
     /**
      * Factory methods for prototype beans
@@ -200,7 +166,7 @@ public class BattleGameConfig {
     }
 
     @Lookup
-    public Player getBattleShipGamePlayer(Person person, Map<Ship, Collection<DestroyableCoordinate>> shipCoordinatesMap, List<Coordinate> missileTargets) {
+    public BattleArea getBattleArea() {
         return null;
     }
 }

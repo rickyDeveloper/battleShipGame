@@ -37,9 +37,6 @@ public class BattleShipGameApplication implements CommandLineRunner {
     @Override
     public void run(String... args) throws Exception {
 
-        BattleArea battleArea = (BattleArea)appContext.getBean("battleArea");
-        System.out.println(battleArea.getBattleArea());
-
         BattleEngine battleEngine = (BattleEngine) appContext.getBean("shipBattleEngine");
 
         battleEngine.startGame();

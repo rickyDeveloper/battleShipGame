@@ -24,6 +24,8 @@ public class TwoDimensionalCoordinate implements Coordinate {
 
     private char y;
 
+    private  boolean isOccupied = false;
+
     public TwoDimensionalCoordinate(char y, int x) {
         this.x = x;
         this.y = y;
@@ -41,6 +43,15 @@ public class TwoDimensionalCoordinate implements Coordinate {
     @Override
     public String toString(){
         return  "" + y + x;
+    }
+
+
+    public void setOccupied(boolean occupied) {
+        isOccupied = occupied;
+    }
+
+    public boolean isOccupied() {
+        return isOccupied;
     }
 
     /**

@@ -1,6 +1,7 @@
 package com.battleship.area;
 
 import com.battleship.coordinate.Coordinate;
+import com.battleship.exception.OverlappingCoordinateException;
 import com.battleship.ship.Ship;
 
 import java.util.Collection;

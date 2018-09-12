@@ -44,15 +44,6 @@ public class SquareBattleAreaTest {
         Mockito.when(coordinate.getY()).thenReturn('A');
     }
 
-    @Test
-    public void testBattleAreaSize() {
-        Assert.assertEquals("BattleArea units should be equal", 9, squareBattleArea.getBattleArea()) ;
-    }
-
-    @Test
-    public void testIncorrectBattleAreaSize() {
-        Assert.assertNotEquals("BattleArea units should not be equal" , 11, squareBattleArea.getBattleArea()) ;
-    }
 
     @Test
     public void testParkShip(){

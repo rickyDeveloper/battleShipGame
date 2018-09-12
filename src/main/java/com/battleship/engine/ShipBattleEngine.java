@@ -4,9 +4,11 @@ import com.battleship.coordinate.Coordinate;
 import com.battleship.player.Player;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.util.Collection;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -22,19 +24,16 @@ import java.util.Map;
 @Qualifier("shipBattleEngine")
 public class ShipBattleEngine implements BattleEngine {
 
-    private Player player1;
+    private List<Player> players;
 
-    private  Player player2;
-
-    private boolean isPlayer1MissileSender;
+    @Value("${battlearea.first.firing.player.number}")
+    private int firingPlayerNumber;
 
     private boolean isGameOver;
 
     @Autowired
-    public ShipBattleEngine(@Qualifier("player1") Player player1, @Qualifier("player2") Player player2) {
-        this.player1 = player1;
-        this.player2 = player2;
-        this.isPlayer1MissileSender = true;
+    public ShipBattleEngine(@Qualifier("players") List<Player> players) {
+        this.players = players;
         this.isGameOver = false;
     }
 
@@ -78,47 +77,25 @@ public class ShipBattleEngine implements BattleEngine {
         System.out.println("Closing the battle...good bye!!");
     }
 
-
     private boolean canGameContinue() {
-        return !isGameOver && (player1.hasNextMissile() || player2.hasNextMissile());
+        return !isGameOver && (players.stream().anyMatch(p -> p.hasNextMissile()));
     }
 
     private void updateMissileSender(boolean hasMissileHit) {
-        isPlayer1MissileSender = (hasMissileHit ? isPlayer1MissileSender : !isPlayer1MissileSender);
+        firingPlayerNumber = (hasMissileHit ? firingPlayerNumber : getNextPlayerNumber());
     }
-
 
    // @VisibleForTesting
     // This method is not private only for testing purpose.
     Player getMissileSender() {
-        return   ( isPlayer1MissileSender ? player1 : player2) ;
+        return players.get(firingPlayerNumber-1) ;
     }
-
 
     private Player getMissileReceiver(){
-        return  isPlayer1MissileSender ? player2 : player1;
+        return  players.get(getNextPlayerNumber()-1);
     }
 
-    /**
-     * Will implement if required
-     * @return
-     */
-    @Override
-    public boolean endGame() {
-        return false;
-    }
-
-    /**
-     * Will implement if required
-     * @return
-     */
-    @Override
-    public boolean pauseGame() {
-        return false;
-    }
-
-    @Override
-    public boolean isGameOver() {
-        return isGameOver;
+    private int getNextPlayerNumber(){
+        return (firingPlayerNumber % players.size() ) + 1;
     }
 }

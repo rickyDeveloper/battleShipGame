@@ -6,8 +6,10 @@ import com.battleship.coordinate.Coordinate;
 import com.battleship.coordinate.TwoDimensionalCoordinate;
 import org.springframework.beans.factory.annotation.Lookup;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Scope;
 
 import java.util.stream.IntStream;
 
@@ -27,10 +29,10 @@ public class SquareBattleAreaConfig {
     @Value("${battlearea.height}")
     private char height;
 
-    @Bean
+    /*@Bean
     public BattleArea battleArea() {
         return new SquareBattleArea(coordinates());
-    }
+    }*/
 
     /**
      * Coordinates for the battle area
@@ -38,6 +40,7 @@ public class SquareBattleAreaConfig {
      * @return
      */
     @Bean
+    @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
     public Coordinate[][] coordinates() {
 
         int heightInInteger = height - y_coordinates[0] + 1;

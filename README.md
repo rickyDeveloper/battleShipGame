@@ -52,7 +52,6 @@ Spring boot Main class of the application is com.battleship.app.BattleShipGameAp
    ShipBattleEngine is the most important class for this app.
    It has details of both the players and game playing logic.
    There is scope to refactor this class and move the game playing logic outside.
-   
 
 
 
@@ -63,6 +62,7 @@ Spring boot Main class of the application is com.battleship.app.BattleShipGameAp
 
 
 
+x`
 
 
 
